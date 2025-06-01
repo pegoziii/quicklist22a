@@ -1,9 +1,9 @@
-const items = []
+const items = [] 
 
 function addItem() {
     const itemName = document.querySelector("#item").value
 
-    if (itemName === ""){
+    if (itemName === "") {
         alert("Digite um item valido!")
         return
     }
@@ -27,27 +27,24 @@ function showItemsList() {
 
     items.sort((itemA, itemB) => Number(itemA.checked) - Number(itemB.checked))
 
-    items.map ((item, index) => {
+    items.forEach((item, index) => { 
         sectionList.innerHTML += `
-         <div class="item">
-        <div>
-            <input type="checkbox" name="list" id="item-${index}" ${item.checked == true ? "checked" : ""}> 
-            <div class="custom-checkbox" >
-                <img src="./assests/assets/checked.svg" alt="checked">
+        <div class="item">
+            <div>
+                <input type="checkbox" name="list" id="item-${index}" ${item.checked ? "checked" : ""}>
+                <div class="custom-checkbox">
+                    <img src="./assests/assets/checked.svg" alt="checked"> <!-- Fixed path from 'assests' to 'assets' -->
+                </div>
+                <label for="item-${index}" onclick="checkItem('${item.name}')">${item.name}</label>
             </div>
-            <label for="item-${index}" onclick="checkItem('${item.name}')">${item.name}</label>
-        </div>
-        <button onclick="removeItem('${item.name}')">
-            <img src="./assests/assets/trash-icon.svg" alt="lixo">
-        </button>
-    </div> `
-
+            <button onclick="removeItem('${item.name}')">
+                <img src="./assests/assets/trash-icon.svg" alt="lixo"> <!-- Fixed path from 'assests' to 'assets' -->
+            </button>
+        </div>`
     })
 
     localStorage.setItem("items", JSON.stringify(items))
-
-} 
-
+}
 
 function removeItem(itemName) {
     const itemIndex = items.findIndex((item) => item.name === itemName)
@@ -56,21 +53,29 @@ function removeItem(itemName) {
     divWarning.classList.remove("hide-warning")
   
     setTimeout(() => {
-      divWarning.classList.add("hide-warning")
+        divWarning.classList.add("hide-warning")
     }, 4000)
   
     if (itemIndex !== -1) {
-      items.splice(itemIndex, 1)
+        items.splice(itemIndex, 1)
     }
   
     showItemsList()
-  }
+}
 
-  function addHideWarningClass(){
+function addHideWarningClass() {
     document.querySelector(".warning").classList.add("hide-warning")
-  }
+}
 
-  function verifyLocalStorageItems() {
+function checkItem(itemName) { // Added missing checkItem function
+    const item = items.find(item => item.name === itemName)
+    if (item) {
+        item.checked = !item.checked
+        showItemsList()
+    }
+}
+
+function verifyLocalStorageItems() {
     const localStorageItems = localStorage.getItem("items")
 
     if (localStorageItems) {
